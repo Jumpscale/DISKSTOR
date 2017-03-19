@@ -99,15 +99,15 @@ see raml specs #TODO
 	- returns json of amount of storage used / expirationc/acl
 	- only for admin of a reservation
 
-- aclSet($admin_IYO_UID,$adminSecret,$dataSecret,$right)
+- aclSet($IYO_UID,$adminSecret,$reservationId,$dataSecret,$right)
 	- only an reservation admin itself can call this method
 	- updates the acl
 	- $right is RWDA . (Read Write Delete Admin)	
 
-- actDelete($admin_IYO_UID,$adminSecret,$dataSecret)
+- actDelete($IYO_UID,$adminSecret,$reservationId,$dataSecret)
 	- removes the acl info for that $dataSecret
 
-- stats($admin_IYO_UID,$adminSecret,$reservationId)
+- stats($IYO_UID,$adminSecret,$reservationId)
 	- returns json with
 		- nr of requests per hour
 		- nr of objects stored
@@ -118,11 +118,10 @@ see raml specs #TODO
 
 #### acl
 
-	- acl:
-		- is dict to $dataSecrets & rights
-		- 1 $dataSecret is a unique secret key, for getting/setting/deleting data in the reserved space
-		- is done per reservation
-
+- acl:
+	- is dict to $dataSecrets & rights
+	- 1 $dataSecret is a unique secret key, for getting/setting/deleting data in the reserved space
+	- is done per reservation
 
 ```json
 {
@@ -152,9 +151,12 @@ maxsizemb: 1024
 dbpath: /storage/db/1/
 ```
 
-other dbengines are: rocksdb,volume, #TODO:
+### implementation ideas
 
-### Volume backend (phase2)
+- rocksdb backend to start with
+- api in goraml, generate the server/client
+- asyncio/sanic implementation
+- create tests in ays
+- deployment only on top of G8OS, per disk
 
-- this is a special high performance backend made for HD's
-- it opens HD as a volume & uses our own datastructure (see doc NOS_backend_vol.md	)
+
