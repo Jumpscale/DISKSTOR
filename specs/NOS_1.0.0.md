@@ -146,7 +146,7 @@ see raml specs #TODO
 - yaml
 
 ```yaml
-dbengine: sophiadb
+dbengine: rocksdb
 maxsizemb: 1024
 dbpath: /storage/db/1/
 ```
