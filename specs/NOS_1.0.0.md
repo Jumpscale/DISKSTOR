@@ -40,9 +40,10 @@
 see raml specs #TODO
 
 ```
-- reserve($IYO_UID,$reservationId, $adminSecret,$nrMB,$expirationEpoch=0)
+- reserve($IYO_UID,$reservationId, $adminSecret,$size,$expirationEpoch=0)
 	- makes a reservation for amount of storage in this NOS
 	- $reservationId is unique id (upto 16 chars) which identifies the reservation
+	- $size is a number of megabytes to reserve
 
 - unreserve($IYO_UID,$id,$reservationAdminSecret)
 	- BE CAREFULL DATA WILL BE REMOVED
