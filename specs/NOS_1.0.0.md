@@ -1,9 +1,10 @@
-## UFS_NOS 1.0:
+## NOS 1.0:
 
 - NOS = Network Object Stor
 - services objects over network from a chosen data structure e.g. SophiaDB...
+- is backend object stor which can be used by high level client for storing files, directories, ...
 
-### format of object (only relevant when option2)
+### format of object
 
 ```
 - binary bytestr
@@ -14,38 +15,29 @@
 ```
 
 - consumer is IYO UID
-- special $byte1's (if used the $bytes2=="")
+- special $byte1's
 	- 0: no consumers, marked for deletion but is still there
 	- 255: permanent = cannot be deleted
 
-### Option 1
+### principles
 
-- implemented as ARDB server on top of SSD or HD
-- security
-	- full access (all redis cmds)
-	- R/W access when keys known (SET/GET)
-- question
-	- need to test which storage engine is the best to work on SSD/HD (prob different)
-- how
-	- some LUA stored procedures in ARDB speed up & provide some additional features
--  is a temporary solution until we have option 2
-
-### Option 2
-
-- network server using capnp or nanomsg in nimlang
-- backend sophia db or ?
-- behaviour on DB implemented in nim
-- if nanomsg then create client in nim & bind to python/golang
-- format of return = capnp objects (to be defined: TODO*1)
+- rest based network server (using go-raml to generate)
+- backend sophia db & rocksdb (rocksdb for ssd, sophiadb for HD, will start with rocksdb)
+- when HD then there is maximum one NOS per HD, on SSD preferably as well but can change
 
 ### methods
 
+see raml specs #TODO
+
 ```
-- reserve($IYO_UID,$id,$nrMB,$expirationEpoch=0, acl = ...)
+- reserve($IYO_UID,$id,$adminSecret,$nrMB,$expirationEpoch=0, acl = ...)
 	- makes a reservation for amount of storage in this NOS
 	- $id is unique id (upto 16 chars) which identifies the reservation
-- unreserve($IYO_UID,$id,$secret)
+	- $adminSecret is a unique secret given by the administrator, which allows to get the info as well as do an unreserve
+
+- unreserve($IYO_UID,$id,$adminSecret)
 	- secret needs to be the admin one
+	- BE CAREFULL DATA WILL BE REMOVED
 
 - put($IYO_UID,$secret,$reservationId,$key,$data,$consumers=[])
 	- will store data with max size 1MB
