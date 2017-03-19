@@ -44,6 +44,7 @@ see raml specs #TODO
 	- makes a reservation for amount of storage in this NOS
 	- $reservationId is unique id (upto 16 chars) which identifies the reservation
 	- $size is a number of megabytes to reserve
+	- $expirationEpoch - all data removed if 
 
 - unreserve($IYO_UID,$id,$reservationAdminSecret)
 	- BE CAREFULL DATA WILL BE REMOVED
