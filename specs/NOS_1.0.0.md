@@ -163,7 +163,9 @@ dbpath: /storage/db/1/
 
 
 ### questions/assumptions:
-- Can another IOY_ID with the same secret perform operations? Do we have access control on secrets only or on IOY_ID+secret? For now API designed assuming control only by secrets. 
-- We use IOY_IDs to identify consumers
-
+- We use only secrets to control access. Any user if he knows proper secret can access reservation. 
+- If acess set for "" (empty) dataSecret it means reservation is open for anyone. 
+- We use IYO_IDs to identify consumers.
+- Data structure contains MD5 hashes of IYO_IDs.
+- On put if we put new data content with the same key, data gets rewrited but consumer list remains the same. 
 
