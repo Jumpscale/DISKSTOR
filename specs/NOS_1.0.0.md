@@ -167,5 +167,6 @@ dbpath: /storage/db/1/
 - If acess set for "" (empty) dataSecret it means reservation is open for anyone. 
 - We use IYO_IDs to identify consumers.
 - Data structure contains MD5 hashes of IYO_IDs.
-- On put if we put new data content with the same key, data gets rewrited but consumer list remains the same. 
+- On put if we put new data content with the same key, data gets rewrited but consumer list remains the same.
+- For now we pass data as strings to the API.
 
