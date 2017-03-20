@@ -82,7 +82,6 @@
 	- if not exist do nothing
 	- if exists remove the consumer from the $consumers field
 	- if exists & its the only consumer then mark object for deletion (do not remove!)
-`	- return [$state,$key]
 	
 - deletes($IYO_UID,$dataSecret,$reservationId,[$key])
 
