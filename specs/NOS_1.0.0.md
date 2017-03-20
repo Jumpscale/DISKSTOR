@@ -164,6 +164,6 @@ dbpath: /storage/db/1/
 
 ### questions/assumptions:
 - Can another IOY_ID with the same secret perform operations? Do we have access control on secrets only or on IOY_ID+secret? For now API designed assuming control only by secrets. 
-- Consumer is IOY_IDs
+- We use IOY_IDs to identify consumers
 
 
