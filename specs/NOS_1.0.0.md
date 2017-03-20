@@ -40,11 +40,13 @@
 see raml specs #TODO
 
 ```
-- reserve($IYO_UID,$reservationId, $adminSecret,$nrMB,$expirationEpoch=0)
+- reserve($IYO_UID,$reservationId, $reservationAdminSecret,$size,$expirationEpoch=0)
 	- makes a reservation for amount of storage in this NOS
 	- $reservationId is unique id (upto 16 chars) which identifies the reservation
+	- $size is a number of megabytes to reserve
+	- $expirationEpoch - all data removed if 
 
-- unreserve($IYO_UID,$id,$reservationAdminSecret)
+- unreserve($IYO_UID,$reservationId,$reservationAdminSecret)
 	- BE CAREFULL DATA WILL BE REMOVED
 
 - put($IYO_UID,$dataSecret,$reservationId,$key,$data,$consumers=[])
@@ -159,4 +161,12 @@ dbpath: /storage/db/1/
 - create tests in ays
 - deployment only on top of G8OS, per disk
 
+
+### questions/assumptions:
+- We use only secrets to control access. Any user if he knows proper secret can access reservation. 
+- If acess set for "" (empty) dataSecret it means reservation is open for anyone. 
+- We use IYO_IDs to identify consumers.
+- Data structure contains MD5 hashes of IYO_IDs.
+- On put if we put new data content with the same key, data gets rewrited but consumer list remains the same.
+- For now we pass data as strings to the API.
 
