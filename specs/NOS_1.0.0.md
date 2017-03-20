@@ -46,7 +46,7 @@ see raml specs #TODO
 	- $size is a number of megabytes to reserve
 	- $expirationEpoch - all data removed if 
 
-- unreserve($IYO_UID,$id,$reservationAdminSecret)
+- unreserve($IYO_UID,$reservationId,$reservationAdminSecret)
 	- BE CAREFULL DATA WILL BE REMOVED
 
 - put($IYO_UID,$dataSecret,$reservationId,$key,$data,$consumers=[])
