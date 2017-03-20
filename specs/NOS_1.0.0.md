@@ -60,12 +60,9 @@
 	- if object marked as permanent then don't add consumers
 	- if object marked for deletion $byte1=254, add consumer and active obj again
 	- if key=="" then calculate md5 or blake32 hash (TODO:)
-	- return [$state & $key]
-		- state: existed, new, deleted
 		
 - puts($IYO_UID,$dataSecret,$reservationId,[$keys],[$data],$consumers=[])
 	- same logic as put but for more objects at once
-	- return [[$state,$key]]
 	
 - get($IYO_UID,$dataSecret,$reservationId,$key,verify=True)
 	- check CRC if verify == True, if wrong return
@@ -165,7 +162,7 @@ dbpath: /storage/db/1/
 ### questions/assumptions:
 - We use only secrets to control access. Any user if he knows proper secret can access reservation. 
 - If acess set for "" (empty) dataSecret it means reservation is open for anyone. 
-- We use IYO_IDs to identify consumers.
+- We use IYO_IDs to identify consumers. 
 - Data structure contains MD5 hashes of IYO_IDs.
 - On put if we put new data content with the same key, data gets rewrited but consumer list remains the same.
 - For now we pass data as strings to the API.
