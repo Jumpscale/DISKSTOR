@@ -162,3 +162,7 @@ dbpath: /storage/db/1/
 - deployment only on top of G8OS, per disk
 
 
+### questions:
+- Can another IOY_ID with the same secret perform operations? Do we have access control on secrets only or on IOY_ID+secret?
+
+
