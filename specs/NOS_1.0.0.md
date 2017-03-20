@@ -37,7 +37,7 @@
 
 ### methods
 
-see raml specs #TODO
+[Raml specs](https://rawgit.com/Jumpscale/NOS/master/specs/api.html)
 
 ```
 - reserve($IYO_UID,$reservationId, $reservationAdminSecret,$size,$expirationEpoch=0)
