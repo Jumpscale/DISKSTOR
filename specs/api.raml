@@ -97,7 +97,7 @@ types:
             IYO_UID:
               type: string
               required: true
-              description: Identity of requeter. Must have Admin rights for reservation.
+              description: Identity of requeter.
             reservationId:
               type: string
               required: true
@@ -129,7 +129,7 @@ types:
             IYO_UID:
               type: string
               required: true
-              description: Identity of requeter. Must have Admin rights for reservation.
+              description: Identity of requeter.
             reservationId:
               type: string
               required: true
@@ -184,7 +184,7 @@ types:
             IYO_UID:
               type: string
               required: true
-              description: Identity of requeter. Must have Admin rights for reservation.
+              description: Identity of requeter.
             reservationId:
               type: string
               required: true
@@ -233,7 +233,7 @@ types:
             IYO_UID:
               type: string
               required: true
-              description: Identity of requeter. Must have Admin rights for reservation.
+              description: Identity of requeter.
             reservationId:
               type: string
               required: true
@@ -241,7 +241,7 @@ types:
             dataSecret:
               type: string
               required: false
-              description: Secret with W access level to the specific reservation. Pass empty string or ignore if reservation is public.
+              description: Secret with R access level to the specific reservation. Pass empty string or ignore if reservation is public.
             key:
               type: string
               required: true
@@ -271,9 +271,151 @@ types:
               key: EFBS-537
               verify: true
               crc: 03938ba0
+      responses:
+        200:
+          description: Returns data or crc verification
+          body:
+            application/json:
+              type: string
+              description: Data or CRC verification result.
+              examples:
+                Regular get request: "LongData1...GoesHere"
+                Key not exists response: ""
+                CRC check request: "true"
+        403:
+          description: reservationId is invalid or dataSecret is incorrect.
   /gets:
+    post:
+      displayName: Get multiple objects from NOS
+      description: Get multiple objects from NOS
+      body:
+        application/json:
+          properties:
+            IYO_UID:
+              type: string
+              required: true
+              description: Identity of requeter.
+            reservationId:
+              type: string
+              required: true
+              description: Unique ID of the reservation
+            dataSecret:
+              type: string
+              required: false
+              description: Secret with R access level to the specific reservation. Pass empty string or ignore if reservation is public.
+            keys:
+              type: string[]
+              required: true
+              description: Array of data keys.
+            verify:
+              type: boolean
+              required: false
+              description: Verify data. If passed true, method uses crc to compare with existing data and returns true/false instead of actual data.
+            crcArray:
+               type: string[]
+               required: false
+               description: Arrays of CRC codes corresponding to passed keys to compare compare with existing data.
+          examples:
+            Regular get for public data:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              keys:
+                - EFBS-537
+                - EFBS-538
+                - EFBS-539
+                - EFBS-540
+            Regular get for private data:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              dataSecret: MqydbtJK/kdlJJ7RjW+5aS25ZlVKWvcWoLY2QXbEr6o=
+              keys:
+                - EFBS-537
+                - EFBS-538
+                - EFBS-539
+                - EFBS-540
+            Private data verification request:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              dataSecret: MqydbtJK/kdlJJ7RjW+5aS25ZlVKWvcWoLY2QXbEr6o=
+              keys:
+                - EFBS-537
+                - EFBS-538
+                - EFBS-539
+                - EFBS-540
+              verify: true
+              crcArray:
+                - 03938ba0
+                - 0c280ac4
+                - 5b22776b
+                - c0764cbe
+      responses:
+        200:
+          description: Returns data or crc verification
+          body:
+            application/json:
+              type: string[]
+              description: Data or CRC verification result.
+              examples:
+                Regular get request:
+                  - "LongData1...GoesHere"
+                  - "LongData2...GoesHere"
+                  - "LongData3...GoesHere"
+                  - "LongData4...GoesHere"
+                Some of the key not exists response:
+                  - ""
+                  - "LongData2...GoesHere"
+                  - ""
+                  - "LongData4...GoesHere"
+                CRC check request:
+                  - "true"
+                  - "true"
+                  - "true"
+                  - "true"
+        403:
+          description: reservationId is invalid or dataSecret is incorrect.
   /list:
+    post:
+      displayName: List keys in the reservation
+      description: List keys in the reservation
+      body:
+        application/json:
+          properties:
+            IYO_UID:
+              type: string
+              required: true
+              description: Identity of requeter.
+            reservationId:
+              type: string
+              required: true
+              description: Unique ID of the reservation.
+            dataSecret:
+              type: string
+              required: false
+              description: Secret with R access level to the specific reservation. Pass empty string or ignore if reservation is public.
+          examples:
+            List for public reservation:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+            List for private reservation:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              dataSecret: MqydbtJK/kdlJJ7RjW+5aS25ZlVKWvcWoLY2QXbEr6o=
+      responses:
+        200:
+          description: Returns list of keys in the reservation.
+          body:
+            application/json:
+              type: string[]
+              description: List of the keys in the reservation.
+              example:
+                - EFBS-537
+                - EFBS-538
+                - EFBS-539
+                - EFBS-540
+        403:
+          description: reservationId is invalid or dataSecret is incorrect.
   /delete:
+
   /deletes:
   /exist:
   /exists:
