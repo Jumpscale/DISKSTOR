@@ -133,7 +133,7 @@ types:
             reservationId:
               type: string
               required: true
-              description: Unique ID of the reservation
+              description: Unique ID of the reservation.
             dataSecret:
               type: string
               required: false
@@ -188,7 +188,7 @@ types:
             reservationId:
               type: string
               required: true
-              description: Unique ID of the reservation
+              description: Unique ID of the reservation.
             dataSecret:
               type: string
               required: false
@@ -237,7 +237,7 @@ types:
             reservationId:
               type: string
               required: true
-              description: Unique ID of the reservation
+              description: Unique ID of the reservation.
             dataSecret:
               type: string
               required: false
@@ -298,7 +298,7 @@ types:
             reservationId:
               type: string
               required: true
-              description: Unique ID of the reservation
+              description: Unique ID of the reservation.
             dataSecret:
               type: string
               required: false
@@ -415,8 +415,89 @@ types:
         403:
           description: reservationId is invalid or dataSecret is incorrect.
   /delete:
-
+    post:
+      displayName: Delete object from NOS.
+      description: Delete object from NOS. Requester removed from consumers list. If no consumers left, object is marked for deletion.
+      body:
+        application/json:
+          properties:
+            IYO_UID:
+              type: string
+              required: true
+              description: Identity of requeter.
+            reservationId:
+              type: string
+              required: true
+              description: Unique ID of the reservation.
+            dataSecret:
+              type: string
+              required: false
+              description: Secret with W access level to the specific reservation. Pass empty string or ignore if reservation is public.
+            key:
+              type: string
+              required: true
+              description: Key for the data to delete.
+          examples:
+            Delete (remove myself from consumers list) public data:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              key: EFBS-537
+            Delete (remove myself from consumers list) for private data:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              dataSecret: MqydbtJK/kdlJJ7RjW+5aS25ZlVKWvcWoLY2QXbEr6o=
+              key: EFBS-537
+      responses:
+        200:
+          description: Operation successfull
+        403:
+          description: reservationId is invalid or dataSecret is incorrect.
   /deletes:
+    post:
+      displayName: Delete multiple objects from NOS.
+      description: Delete multiple objects from NOS. Requester removed from consumers list. If no consumers left, objects is marked for deletion.
+      body:
+        application/json:
+          properties:
+            IYO_UID:
+              type: string
+              required: true
+              description: Identity of requeter.
+            reservationId:
+              type: string
+              required: true
+              description: Unique ID of the reservation.
+            dataSecret:
+              type: string
+              required: false
+              description: Secret with W access level to the specific reservation. Pass empty string or ignore if reservation is public.
+            keys:
+              type: string[]
+              required: true
+              description: Keys for the data to delete.
+          examples:
+            Delete (remove myself from consumers list) public data:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              keys:
+                - EFBS-537
+                - EFBS-538
+                - EFBS-539
+                - EFBS-540
+            Delete (remove myself from consumers list) for private data:
+              IYO_UID: 6a6f686e646f656a756e696f7274776f
+              reservationId: D9kdMquM0ElYvnQ3
+              dataSecret: MqydbtJK/kdlJJ7RjW+5aS25ZlVKWvcWoLY2QXbEr6o=
+              keys:
+                - EFBS-537
+                - EFBS-538
+                - EFBS-539
+                - EFBS-540
+      responses:
+        200:
+          description: Operation successfull
+        403:
+          description: reservationId is invalid or dataSecret is incorrect.
   /exist:
   /exists:
   /existsMark:
