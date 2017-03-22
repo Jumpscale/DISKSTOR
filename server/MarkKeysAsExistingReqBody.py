@@ -6,8 +6,7 @@ from input_validators import multiple_of
 
 
 
-class ListkeysinthereservationReqBody(Form):
+class MarkKeysAsExistingReqBody(Form):
     
-    dataSecret = TextField(validators=[])
-    requesterUID = TextField(validators=[DataRequired(message="")])
-    reservationId = TextField(validators=[DataRequired(message="")])
+    consumers = FieldList(TextField('consumers', [required()]), )
+    keys = FieldList(TextField('keys', [required()]), DataRequired(message=""))

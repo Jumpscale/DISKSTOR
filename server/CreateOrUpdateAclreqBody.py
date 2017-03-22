@@ -7,8 +7,6 @@ from input_validators import multiple_of
 from AclEntry import AclEntry
 
 
-class PostnewAccessControlentryReqBody(Form):
+class CreateOrUpdateAclreqBody(Form):
     
     aclEntry = FormField(AclEntry)
-    requesterUID = TextField(validators=[DataRequired(message="")])
-    reservationAdminSecret = TextField(validators=[DataRequired(message="")])

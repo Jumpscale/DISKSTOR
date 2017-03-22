@@ -6,7 +6,6 @@ from input_validators import multiple_of
 
 
 
-class PutdataintostorageReqBody(Form):
+class DeleteMultipleObjectsReqBody(Form):
     
-    consumers = FieldList(TextField('consumers', [required()]), )
-    data = FileField(validators=[DataRequired(message=""), Length(max=1048576)])
+    keys = FieldList(TextField('keys', [required()]), DataRequired(message=""))
