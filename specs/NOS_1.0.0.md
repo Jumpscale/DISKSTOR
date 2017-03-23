@@ -35,9 +35,9 @@
 - dataSecret
 	- gives RWD rights to a data in a reservation
 
-### methods
+### API
 
-[Raml API HTML description](https://rawgit.com/Jumpscale/NOS/master/specs/api.html)
+[RAML API HTML description](https://rawgit.com/Jumpscale/NOS/master/specs/api.html)
 
 See spec draft from Kristof for historical reference: [https://github.com/Jumpscale/NOS/blob/master/specs/API_spec_draft.md](https://github.com/Jumpscale/NOS/blob/master/specs/API_spec_draft.md)
 
