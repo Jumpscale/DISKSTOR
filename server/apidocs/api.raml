@@ -2,6 +2,7 @@
 title: Network Object Store
 version: v0.1.0
 mediaType:  application/json
+baseUri: https://127.0.0.1:5000
 
 traits:
   withRequesterUIDHeader:
@@ -23,17 +24,6 @@ traits:
         description: DataSecret is invalid.
 
 types:
-  Payload:
-    description: Key and data to store in NOS.
-    properties:
-      key:
-        type: string
-        description: Key of the Payload
-      data:
-        type: file
-        maxLength: 1048576
-        required: true
-        description: Data to store. Max size is 1MB. Base64 encoded string.
   AclEntry:
     description: Access control entry for the reservation
     properties:
@@ -192,31 +182,29 @@ types:
         displayName: Get Multiple Objects
         description: Get Multiple Objects from NOS or check CRC.
         is: [ withRequesterUIDHeader, withDataSecretHeader ]
-        body:
-          multipart/form-data:
-            properties:
-              keys:
-                type: string[]
-                required: true
-                description: Array of data keys.
-                example:
-                  - EFBS-537
-                  - EFBS-538
-                  - EFBS-539
-                  - EFBS-540
-              verify:
-                type: boolean
-                required: false
-                description: Verify data. If passed true, method uses crc to compare with existing data and returns true/false instead of actual data.
-              crcArray:
-                 type: string[]
-                 required: false
-                 description: Arrays of CRC codes corresponding to passed keys to compare compare with existing data.
-                 example:
-                   - 03938ba0
-                   - 0c280ac4
-                   - 5b22776b
-                   - c0764cbe
+        queryParameters:
+          keys:
+            type: string[]
+            required: true
+            description: Array of data keys.
+            example:
+              - EFBS-537
+              - EFBS-538
+              - EFBS-539
+              - EFBS-540
+          verify:
+            type: boolean
+            required: false
+            description: Verify data. If passed true, method uses crc to compare with existing data and returns true/false instead of actual data.
+          crcArray:
+             type: string[]
+             required: false
+             description: Arrays of CRC codes corresponding to passed keys to compare compare with existing data.
+             example:
+               - 03938ba0
+               - 0c280ac4
+               - 5b22776b
+               - c0764cbe
         responses:
           200:
             description: Returns data or crc verification
@@ -244,13 +232,30 @@ types:
         displayName: Delete Multiple Objects
         description: Delete multiple objects from NOS. Requester removed from consumers list. If no consumers left, objects is marked for deletion.
         is: [ withRequesterUIDHeader, withDataSecretHeader ]
+        queryParameters:
+          keys:
+            type: string[]
+            required: true
+            description: Keys for the data to delete.
+            example:
+              - EFBS-537
+              - EFBS-538
+              - EFBS-539
+              - EFBS-540
+        responses:
+          200:
+            description: Operation successful
+      head:
+        displayName: Check Existance For Multiple Objects
+        description: Check existance of multiple objects in NOS.
+        is: [ withRequesterUIDHeader, withDataSecretHeader ]
         body:
-          application/json:
+          multipart/form-data:
             properties:
               keys:
                 type: string[]
                 required: true
-                description: Keys for the data to delete.
+                description: Keys for the objects to check.
                 example:
                   - EFBS-537
                   - EFBS-538
@@ -259,35 +264,15 @@ types:
         responses:
           200:
             description: Operation successful
-      /exists:
-        get:
-          displayName: Check Existance For Multiple Objects
-          description: Check existance of multiple objects in NOS.
-          is: [ withRequesterUIDHeader, withDataSecretHeader ]
-          body:
-            multipart/form-data:
-              properties:
-                keys:
-                  type: string[]
-                  required: true
-                  description: Keys for the objects to check.
-                  example:
-                    - EFBS-537
-                    - EFBS-538
-                    - EFBS-539
-                    - EFBS-540
-          responses:
-            200:
-              description: Operation successful
-              body:
-                application/json:
-                  type: boolean[]
-                  description: List of boolean values corresponding passed keys in the same order.
-                  example:
-                    - true
-                    - true
-                    - false
-                    - true
+            body:
+              application/json:
+                type: boolean[]
+                description: List of boolean values corresponding passed keys in the same order.
+                example:
+                  - true
+                  - true
+                  - false
+                  - true
       /mark:
         post:
           displayName: Mark Keys As Existing
@@ -357,69 +342,73 @@ types:
           responses:
             200:
               description: Operation successful
-        /exist:
-          get:
-            displayName: Check Object Existance
-            description: Check existance of the object in NOS.
-            is: [ withRequesterUIDHeader, withDataSecretHeader ]
-            responses:
-              200:
-                description: Operation successful
-                body:
-                  application/json:
-                    type: boolean
-                    description: True if object exists.
-  /{reservationId}/keys:
-    get:
-      displayName: List Keys
-      description: List keys in the reservation
-      is: [ withRequesterUIDHeader, withDataSecretHeader ]
-      responses:
-        200:
-          description: Returns list of keys in the reservation.
-          body:
-            application/json:
-              type: string[]
-              description: List of the keys in the reservation.
-              example:
-                - EFBS-537
-                - EFBS-538
-                - EFBS-539
-                - EFBS-540
-  /aclEntries:
-    post:
-      displayName: Create Or Update ACL
-      description: Post new Access Control entry or edit existing one.
-      is: [ withRequesterUIDHeader, withDataSecretHeader ]
-      body:
-        application/json:
-          properties:
-            aclEntry:
-              type: AclEntry
-              required: true
-              description: ACL entry
-              example:
-                dataSecret: MyPublicRes1
-                acl: RW
-      responses:
-        200:
-          description: ACL Entry posted successfuly.
-    get:
-      displayName: Get ACL List
-      description: Get full ACL list for current reservation. Requester should have A (admin) rights.
-      is: [ withRequesterUIDHeader, withDataSecretHeader ]
-      responses:
-        200:
-          description: List of ACL entries.
-          body:
-            application/json:
-              type: AclEntry[]
-              description: List of ACL entries.
-    /{dataSecret}:
-      delete:
-        displayName: Delete ACL Entry
-        description: Delete data secret from ACL.
+        head:
+          displayName: Check Object Existance
+          description: Check existance of the object in NOS.
+          is: [ withRequesterUIDHeader, withDataSecretHeader ]
+          responses:
+            200:
+              description: Operation successful
+              body:
+                application/json:
+                  type: boolean
+                  description: True if object exists.
+    /keys:
+      get:
+        displayName: List Keys
+        description: List keys in the reservation
         is: [ withRequesterUIDHeader, withDataSecretHeader ]
         responses:
           200:
-            description: ACL Entry was deleted.
+            description: Returns list of keys in the reservation.
+            body:
+              application/json:
+                type: string[]
+                description: List of the keys in the reservation.
+                example:
+                  - EFBS-537
+                  - EFBS-538
+                  - EFBS-539
+                  - EFBS-540
+    /aclEntries:
+      post:
+        displayName: Create Or Update ACL
+        description: Post new Access Control entry or edit existing one.
+        is: [ withRequesterUIDHeader, withDataSecretHeader ]
+        body:
+          application/json:
+            properties:
+              aclEntry:
+                type: AclEntry
+                required: true
+                description: ACL entry
+                example:
+                  dataSecret: MyPublicRes1
+                  acl: RW
+        responses:
+          200:
+            description: ACL Entry posted successfuly.
+      get:
+        displayName: Get ACL List
+        description: Get full ACL list for current reservation. Requester should have A (admin) rights.
+        is: [ withRequesterUIDHeader, withDataSecretHeader ]
+        responses:
+          200:
+            description: List of ACL entries.
+            body:
+              application/json:
+                type: AclEntry[]
+                description: List of ACL entries.
+                example:
+                  - dataSecret: "MqydbtJK/kdlJJ7RjW+5aS25ZlVKWvcWoLY2QXbEr6o="
+                    acl: "RWDA"
+                  - dataSecret: MyPublicRes1
+                    acl: RWs
+      /{dataSecret}:
+        delete:
+          displayName: Delete ACL Entry
+          description: Delete data secret from ACL.
+          is: [ withRequesterUIDHeader, withDataSecretHeader ]
+          responses:
+            200:
+              description: ACL Entry was deleted.

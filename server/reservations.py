@@ -1,10 +1,9 @@
 from flask import Blueprint, jsonify, request
 
 
-from ReservationsAclEntriesPostReqBody import ReservationsAclEntriesPostReqBody
-from ReservationsPostReqBody import ReservationsPostReqBody
-from ReservationsReservationIdObjectsDeleteReqBody import ReservationsReservationIdObjectsDeleteReqBody
-from ReservationsReservationIdObjectsMarkPostReqBody import ReservationsReservationIdObjectsMarkPostReqBody
+from CreateOrUpdateAclreqBody import CreateOrUpdateAclreqBody
+from MakeReservationReqBody import MakeReservationReqBody
+from MarkKeysAsExistingReqBody import MarkKeysAsExistingReqBody
 
 reservations_api = Blueprint('reservations_api', __name__)
 
@@ -16,7 +15,7 @@ def MakeReservation():
     It is handler for POST /reservations
     '''
     
-    inputs = ReservationsPostReqBody.from_json(request.get_json())
+    inputs = MakeReservationReqBody.from_json(request.get_json())
     if not inputs.validate():
         return jsonify(errors=inputs.errors), 400
     
@@ -70,20 +69,6 @@ def DeleteMultipleObjects(reservationId):
     It is handler for DELETE /reservations/<reservationId>/objects
     '''
     
-    inputs = ReservationsReservationIdObjectsDeleteReqBody.from_json(request.get_json())
-    if not inputs.validate():
-        return jsonify(errors=inputs.errors), 400
-    
-    return jsonify()
-
-
-@reservations_api.route('/reservations/<reservationId>/objects/exists', methods=['GET'])
-def CheckExistanceForMultipleObjects(reservationId):
-    '''
-    Check existance of multiple objects in NOS.
-    It is handler for GET /reservations/<reservationId>/objects/exists
-    '''
-    
     return jsonify()
 
 
@@ -94,7 +79,7 @@ def MarkKeysAsExisting(reservationId):
     It is handler for POST /reservations/<reservationId>/objects/mark
     '''
     
-    inputs = ReservationsReservationIdObjectsMarkPostReqBody.from_json(request.get_json())
+    inputs = MarkKeysAsExistingReqBody.from_json(request.get_json())
     if not inputs.validate():
         return jsonify(errors=inputs.errors), 400
     
@@ -121,16 +106,6 @@ def DeleteObject(key, reservationId):
     return jsonify()
 
 
-@reservations_api.route('/reservations/<reservationId>/objects/<key>/exist', methods=['GET'])
-def CheckObjectExistance(key, reservationId):
-    '''
-    Check existance of the object in NOS.
-    It is handler for GET /reservations/<reservationId>/objects/<key>/exist
-    '''
-    
-    return jsonify()
-
-
 @reservations_api.route('/reservations/<reservationId>/keys', methods=['GET'])
 def ListKeys(reservationId):
     '''
@@ -141,35 +116,35 @@ def ListKeys(reservationId):
     return jsonify()
 
 
-@reservations_api.route('/reservations/aclEntries', methods=['GET'])
-def GetACLList():
+@reservations_api.route('/reservations/<reservationId>/aclEntries', methods=['GET'])
+def GetACLList(reservationId):
     '''
     Get full ACL list for current reservation. Requester should have A (admin) rights.
-    It is handler for GET /reservations/aclEntries
+    It is handler for GET /reservations/<reservationId>/aclEntries
     '''
     
     return jsonify()
 
 
-@reservations_api.route('/reservations/aclEntries', methods=['POST'])
-def CreateOrUpdateACL():
+@reservations_api.route('/reservations/<reservationId>/aclEntries', methods=['POST'])
+def CreateOrUpdateACL(reservationId):
     '''
     Post new Access Control entry or edit existing one.
-    It is handler for POST /reservations/aclEntries
+    It is handler for POST /reservations/<reservationId>/aclEntries
     '''
     
-    inputs = ReservationsAclEntriesPostReqBody.from_json(request.get_json())
+    inputs = CreateOrUpdateAclreqBody.from_json(request.get_json())
     if not inputs.validate():
         return jsonify(errors=inputs.errors), 400
     
     return jsonify()
 
 
-@reservations_api.route('/reservations/aclEntries/<dataSecret>', methods=['DELETE'])
-def DeleteACLEntry(dataSecret):
+@reservations_api.route('/reservations/<reservationId>/aclEntries/<dataSecret>', methods=['DELETE'])
+def DeleteACLEntry(dataSecret, reservationId):
     '''
     Delete data secret from ACL.
-    It is handler for DELETE /reservations/aclEntries/<dataSecret>
+    It is handler for DELETE /reservations/<reservationId>/aclEntries/<dataSecret>
     '''
     
     return jsonify()
