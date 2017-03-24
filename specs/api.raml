@@ -184,27 +184,19 @@ types:
         is: [ withRequesterUIDHeader, withDataSecretHeader ]
         queryParameters:
           keys:
-            type: string[]
+            type: string
             required: true
-            description: Array of data keys.
-            example:
-              - EFBS-537
-              - EFBS-538
-              - EFBS-539
-              - EFBS-540
+            description: Array of data keys separated by ','.
+            example: EFBS-537,EFBS-538,EFBS-539,EFBS-540
           verify:
             type: boolean
             required: false
             description: Verify data. If passed true, method uses crc to compare with existing data and returns true/false instead of actual data.
           crcArray:
-             type: string[]
+             type: string
              required: false
-             description: Arrays of CRC codes corresponding to passed keys to compare compare with existing data.
-             example:
-               - 03938ba0
-               - 0c280ac4
-               - 5b22776b
-               - c0764cbe
+             description: Arrays of CRC codes corresponding to passed keys to compare compare with existing data. Separated by ','.
+             example: 03938ba0,0c280ac4,5b22776b,c0764cbe
         responses:
           200:
             description: Returns data or crc verification
@@ -234,14 +226,10 @@ types:
         is: [ withRequesterUIDHeader, withDataSecretHeader ]
         queryParameters:
           keys:
-            type: string[]
+            type: string
             required: true
-            description: Keys for the data to delete.
-            example:
-              - EFBS-537
-              - EFBS-538
-              - EFBS-539
-              - EFBS-540
+            description: Keys for the data to delete separated by ','
+            example: EFBS-537,EFBS-538,EFBS-539,EFBS-540
         responses:
           200:
             description: Operation successful
