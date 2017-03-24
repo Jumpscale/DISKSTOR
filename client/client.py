@@ -1,6 +1,6 @@
 import requests
 
-from .reservations_service import  ReservationsService 
+from .reservations_service import  ReservationsService
 
 
 class Client:
@@ -8,7 +8,7 @@ class Client:
         self.base_url = base_uri
         self.session = requests.Session()
         self.session.headers.update({"Content-Type": "application/json"})
-        
+
         self.reservations = ReservationsService(self)
 
     def is_goraml_class(self, data):
